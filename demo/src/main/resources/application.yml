@@ -1,0 +1,6 @@
+profiles:
+    active: prod
+    dev:
+      message: "Salutation !"
+    prod:
+      message: "Gutentag"
