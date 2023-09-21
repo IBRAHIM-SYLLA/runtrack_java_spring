@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Liste des personnes</title>
+</head>
+<body>
+<h1>Liste des personnes</h1>
+<div th:each="personne : ${listPersonnes}">
+    <table>
+        <tr>
+            <th>Nom</th>
+            <th>age</th>
+        </tr>
+        <tr>
+            <td th:text="${personne.name}"></td>
+            <td th:text="${personne.age}"></td>
+        </tr>
+    </table>
+    <div>
+        <form method="post" action="/modifier">
+            <input type="hidden" name="id" th:value="${personne.id}">
+            <div>
+                <label for="name">Nom</label>
+                <input type="text" name="name" th:value="${personne.name}">
+            </div>
+
+            <div>
+                <label for="age">Age</label>
+                <input type="number" name="age" th:value="${personne.age}">
+            </div>
+
+            <button type="submit" class="btn-sub">Valider</button>
+        </form>
+        <form method="post" action="/delete">
+            <input type="hidden" name="id" th:value="${personne.id}">
+            <button type="submit" class="btn-del">Supprimer</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,38 +1,36 @@
-package com.example.jour3.Controller;
+package com.example.jour4.Controller;
 
-import com.example.jour3.Interfaces.PersonRepository;
-import com.example.jour3.Models.Person;
-
+import com.example.jour4.Services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
+import com.example.jour4.Models.Person;
 
 import java.util.List;
 
 @Controller
 public class PersonController {
-    @Autowired
-    PersonRepository repo;
 
-    public void createPerson(String name, Integer age){
-        Person person = new Person(name, age);
-        repo.save(person);
-        return;
+   private PersonService service;
+
+    @Autowired
+    public PersonController(PersonService personService) {
+        this.service = personService;
     }
 
     @GetMapping("/person")
-    public String findAllPerson(Model model){
-        List<Person> listPersonnes = repo.findAll();
-        if(listPersonnes.size() == 0){
-            createPerson("Ibrah", 21);
-            createPerson("Thibault", 21);
-            createPerson("Cyril", 34);
-            createPerson("Mylan", 26);
-            createPerson("Rodolphe", 100);
+    public String findAllUser(Model model){
+        List<Person> listPersonnes = service.findAllPerson();
+        if(listPersonnes.isEmpty()){
+            service.createPerson("Ibrah", 21);
+            service.createPerson("Thibault", 21);
+            service.createPerson("Cyril", 34);
+            service.createPerson("Mylan", 26);
+            service.createPerson("Rodolphe", 100);
         }
         model.addAttribute("listPersonnes", listPersonnes);
         return "person";
@@ -41,7 +39,7 @@ public class PersonController {
 
     @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") Long id){
-        repo.deleteById(id);
+        service.deletePerson(id);
         return "redirect:/person";
     }
 
@@ -51,10 +49,7 @@ public class PersonController {
         @RequestParam("name") String name,
         @RequestParam("age") int age
     ){
-        Person onePerson = repo.findById(id).get();
-        onePerson.setName(name);
-        onePerson.setAge(age);
-        repo.save(onePerson);
+        service.updatePerson(id, name, age);
         return "redirect:/person";
     }
 }
